@@ -1,47 +1,53 @@
 package com.fatec.loja;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fatec.loja.ClienteModel;
-
 @RestController
-@CrossOrigin("*")
 public class ClienteController {
-
-    @GetMapping("/api/cliente/")
-    public ResponseEntity<ClienteModel> detalhe(@RequestParam int codigo){
-            ClienteModel obj = new ClienteModel();
-            obj.setCodigo(codigo);
-            obj.setNome("maria");
-            obj.setDocumento("234234234");
-            obj.setEmail("norton@norton.net.br");
-            return ResponseEntity.ok(obj);
-    }
+    @Autowired
+    ClienteRepository bd;
 
     @PostMapping("/api/cliente")
-    public ResponseEntity<String> inserir(@RequestBody ClienteModel obj){
-        //TODO GRAVEI
-        return ResponseEntity.ok("Registro inserido com sucesso");
+    public String gravar(@RequestBody ClienteModel obj){
+        bd.save(obj);
+        return "O cliente "+ obj.getNome() + " foi gravado !!";        
     }
-        
+
     @PutMapping("/api/cliente")
-    public ResponseEntity<String> alterar(@RequestBody ClienteModel obj){
-        //TODO alterei
-        return ResponseEntity.ok("Registro alterado com sucesso");
+    public String alterar(@RequestBody ClienteModel obj){
+        bd.save(obj);
+        return "O cliente "+ obj.getNome() + " foi alterado !!";        
     }
 
-    @DeleteMapping("/api/cliente")
-    public ResponseEntity<String> remover(@RequestBody ClienteModel obj){
-        //TODO removido
-        return ResponseEntity.ok("Registro removido com sucesso");
+    @GetMapping("/api/cliente/{codigo}")
+    public ClienteModel carregar(@PathVariable int codigo){
+       Optional<ClienteModel> obj = bd.findById(codigo);
+       if(obj.isPresent()){
+        return obj.get();    
+       } else {
+        return null;
+       }
+    }    
+
+    @DeleteMapping("/api/cliente/{codigo}")
+    public String remover(@PathVariable int codigo){
+        bd.deleteById(codigo);
+        return "cliente "+ codigo +" removido com sucesso!";
     }
 
+    @GetMapping("/api/clientes")
+    public List<ClienteModel> todos(){
+        return bd.findAll();
+    }
 }

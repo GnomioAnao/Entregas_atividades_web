@@ -1,6 +1,14 @@
 package com.fatec.loja;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class ClienteModel {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int codigo;
     private String nome;
     private String email;
@@ -12,23 +20,6 @@ public class ClienteModel {
     private String uf;
     
     public ClienteModel(){}
-
-    
-
-    public ClienteModel(int codigo, String nome, String email, String telefone, String documento, String logradouro,
-            String cep, String cidade, String uf) {
-        this.codigo = codigo;
-        this.nome = nome;
-        this.email = email;
-        this.telefone = telefone;
-        this.documento = documento;
-        this.logradouro = logradouro;
-        this.cep = cep;
-        this.cidade = cidade;
-        this.uf = uf;
-    }
-
-
 
     public int getCodigo() {
         return codigo;
